@@ -2,28 +2,30 @@
 
 > Detects the presence of a single frequency in a stream of signal samples.
 
+(Attention: this is a fork that was modified to use stream Buffers instead of AudioBuffers)
+
 # example
 
 ```js
 var goertzel = require('goertzel-stream')
-var Generator = require('audio-generator')
+var ToneStream = require('tone-stream')
 
 var freq = 697
 
-// Generate a sine wave at 697 Hz
-var gen = Generator(function (time) {
-  if (time > 1) {
-    return 0
-  } else {
-    return Math.sin(Math.PI * 2 * time * freq)
-  }
+var ts = new ToneStream({
+	sampleRate: 44100,
+	bitDepth: 16,
+	channels: 1
 })
+
+ts.add([1000, freq])
+ts.add([1000, 0]) // silence
 
 // Detection stream looking for the 697 Hz frequency
 var detect = goertzel(freq)
 
 // Pipe the signal into the detector
-gen.pipe(detect)
+ts.pipe(detect)
 
 detect.on('toneStart', function (tones) {
   console.log('start', tones)
@@ -34,8 +36,8 @@ detect.on('toneEnd', function (tones) {
 ```
 
 ```
-{ '697': { start: 0 } }
-{ '697': { start: 0, end: 1 } }
+start { '697': { start: 0 } }
+start { '697': { start: 0, end: 0.03 } }
 ```
 
 # api

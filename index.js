@@ -42,10 +42,27 @@ function GoertzelStream (freqs, opts) {
   var active = {}
 
   this._write = function (buffer, enc, next) {
+  	/*
+    console.log(`_write()`)
+    console.log(buffer.length, buffer)
     var chunk = buffer.getChannelData(0)
+	*/
+	
+	var length = Math.floor(buffer.length / 2)
+	var chunk = new Float32Array(length)
+	for(var i = 0 ; i<length ; i++) {
+		var f = buffer.readInt16LE(i*2)
+		var LIMIT = 0.9999999999999999
+
+		f = (LIMIT - -LIMIT)/(32767 - -32768)*(f - 32767)+LIMIT
+		//if(f != 0) console.log(f)
+		chunk[i] = f
+	}
+	//console.log("chunk", chunk.length, chunk)
+
     var chunkSize = sampleRate / testsPerSecond
     var chunks = Math.floor(chunk.length / chunkSize)
-    // console.log(buffer.length, chunkSize)
+    //console.log(buffer.length, chunkSize)
     var self = this
     // TODO: accumulate in buffer when buffer.length < chunkSize
     if (chunks <= 0) { throw new Error('chunk size too small') }

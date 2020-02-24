@@ -13,8 +13,10 @@
     "goertzel": "^3.0.0"
   },
   "devDependencies": {
-    "standard": "5.4.1",
-    "tape": "4.4.0"
+    "audio-generator": "^2.1.2",
+    "standard": "^14.3.1",
+    "tape": "4.4.0",
+    "tone-stream": "^1.2.0"
   },
   "keywords": [
     "goertzel",
