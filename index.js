@@ -52,10 +52,12 @@ function GoertzelStream (freqs, opts) {
 	var chunk = new Float32Array(length)
 	for(var i = 0 ; i<length ; i++) {
 		var f = buffer.readInt16LE(i*2)
-		var LIMIT = 0.9999999999999999
+		if(f != 0) {
+			var LIMIT = 0.9999999999999999
 
-		f = (LIMIT - -LIMIT)/(32767 - -32768)*(f - 32767)+LIMIT
-		//if(f != 0) console.log(f)
+			f = (LIMIT - -LIMIT)/(32767 - -32768)*(f - 32767)+LIMIT
+			//if(f != 0) console.log(f)
+		}
 		chunk[i] = f
 	}
 	//console.log("chunk", chunk.length, chunk)
