@@ -6,6 +6,15 @@ var WritableStream = require('stream').Writable
 util.inherits(GoertzelStream, EventEmitter)
 util.inherits(GoertzelStream, WritableStream)
 
+function linear16buffer_to_Float32Array(buffer) {
+    var data = new Float32Array(buffer.length / 2);
+    for (var i = 0; i < data.length; i++) {
+        var sample = buffer.readInt16LE(i * 2);
+        data[i] = sample * 2 / 0x7FFF;
+    }
+    return data;
+}
+
 function GoertzelStream (freqs, opts) {
   if (!(this instanceof GoertzelStream)) {
     return new GoertzelStream(freqs, opts)
@@ -42,7 +51,8 @@ function GoertzelStream (freqs, opts) {
   var active = {}
 
   this._write = function (buffer, enc, next) {
-    var chunk = buffer//.getChannelData(0)
+    var chunk = linear16buffer_to_Float32Array(buffer)
+
     var chunkSize = sampleRate / testsPerSecond
     var chunks = Math.floor(chunk.length / chunkSize)
     //console.log("_write", enc, buffer.length, chunkSize)
