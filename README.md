@@ -2,7 +2,7 @@
 
 > Detects the presence of a single frequency in a stream of signal samples.
 
-(Attention: this is a fork that was modified to use stream Buffers instead of AudioBuffers)
+(Attention: this is a fork that was modified to use stream Linear16 Buffers instead of AudioBuffers)
 
 # example
 
